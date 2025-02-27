@@ -1,0 +1,10 @@
+{
+    "screens": {
+        "board": {},
+        "home": {
+            "new_game_dialog":{}
+        },
+        "highscore": {},
+        "notfound": {}
+    }
+}

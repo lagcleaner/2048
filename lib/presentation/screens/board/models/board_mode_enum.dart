@@ -1,0 +1,4 @@
+enum BoardModeEnum {
+  survivalMaxScore,
+  timeRecord,
+}
