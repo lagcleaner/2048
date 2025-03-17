@@ -20,6 +20,19 @@ class BoardArgumentsModel {
        ),
        assert(appBartitle != '', 'board title must not be null');
 
+  static final BoardArgumentsModel survivalDefaultArgs = BoardArgumentsModel(
+    mode: BoardModeEnum.survivalMaxScore,
+    appBartitle: 'Survival',
+    undoLastMoveAvailable: true,
+    dimension: (rows: 4, cols: 4),
+  );
+  static final BoardArgumentsModel timeRecordDefaultArgs = BoardArgumentsModel(
+    mode: BoardModeEnum.timeRecord,
+    appBartitle: 'Time Record',
+    undoLastMoveAvailable: true,
+    dimension: (rows: 4, cols: 4),
+  );
+
   BoardArgumentsModel copyWith({
     BoardModeEnum? mode,
     String? appBartitle,

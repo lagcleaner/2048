@@ -1,15 +1,30 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:nativewrappers/_internal/vm/lib/developer.dart';
+
 import 'package:flutter/material.dart';
+import 'package:game2048/presentation/screens/board/components/game_movement_detector.dart';
 import 'package:game2048/presentation/screens/board/models/board_arguments_model.dart';
+import 'package:game2048/presentation/screens/board/models/board_mode_enum.dart';
 
 class BoardScreen extends StatelessWidget {
-  const BoardScreen({super.key, required this.boardArguments});
+  const BoardScreen({super.key, this.args});
 
-  static String route = "/board";
-  final BoardArgumentsModel boardArguments;
+  static const String route = "/board";
+  final Object? args;
 
   @override
   Widget build(BuildContext context) {
+    var boardArguments = switch (args) {
+      Map<String, dynamic> args => BoardArgumentsModel.fromMap(args),
+      BoardArgumentsModel args => args,
+      (int cols, int rows) => BoardArgumentsModel.survivalDefaultArgs.copyWith(
+        dimension: (cols: cols, rows: rows),
+      ),
+      BoardModeEnum.survivalMaxScore => BoardArgumentsModel.survivalDefaultArgs,
+      BoardModeEnum.timeRecord => BoardArgumentsModel.timeRecordDefaultArgs,
+      Object() || null => BoardArgumentsModel.survivalDefaultArgs,
+    };
+
     return _BoardScreenInternal(boardArguments: boardArguments);
   }
 }
