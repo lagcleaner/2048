@@ -1,32 +1,50 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:game2048/presentation/misc/theme/theme.dart';
 import 'package:game2048/presentation/screens/board/board_screen.dart';
+import 'package:game2048/presentation/screens/high_scores/high_scores.dart';
 import 'package:game2048/presentation/screens/home/home_screen.dart';
 import 'package:game2048/presentation/screens/not_found/models/not_found_arguments_model.dart';
 import 'package:game2048/presentation/screens/not_found/not_found_screen.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class TwentyFortyEightApp extends StatelessWidget {
+  const TwentyFortyEightApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '2048',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const HomeScreen(title: '2048'),
+      themeMode: ThemeMode.light,
+      theme: ThemeConstants.lightTheme,
+      darkTheme: ThemeConstants.darkTheme,
       initialRoute: BoardScreen.route,
-      onUnknownRoute:
-          (settings) => MaterialPageRoute(
-            builder:
-                (context) => NotFoundScreen(
-                  arguments: NotFoundArgumentsModel(
-                    routeNotFound: settings.name ?? '',
-                    arguments: null,
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case BoardScreen.route:
+            return CupertinoPageRoute(
+              builder: (context) => BoardScreen(args: settings.arguments),
+            );
+          case HomeScreen.route:
+            return CupertinoPageRoute(
+              builder: (context) => HomeScreen(args: settings.arguments),
+            );
+          case HighScoresScreen.route:
+            return CupertinoPageRoute(
+              builder: (context) => HighScoresScreen(args: settings.arguments),
+            );
+          case '' || null:
+          default:
+            return CupertinoPageRoute(
+              builder:
+                  (context) => NotFoundScreen(
+                    arguments: NotFoundArgumentsModel(
+                      routeNotFound: settings.name ?? '',
+                      arguments: settings.arguments,
+                    ),
                   ),
-                ),
-          ),
+            );
+        }
+      },
     );
   }
 }
