@@ -20,7 +20,7 @@ class GameMovementDetector extends StatelessWidget {
   final Future<void> Function()? onSwipeLeft;
   final Future<void> Function()? onSwipeRight;
   final Future<void> Function(LogicalKeyboardKey key)? onKeyPressed;
-  static const _minimumOffset = 100;
+  static const _minimumOffset = 100.0;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class GameMovementDetector extends StatelessWidget {
       },
       child: SwipeDetector(
         onSwipe: (direction, offset) {
-          if (offset.dx.abs() < _minimumOffset ||
+          if (offset.dx.abs() < _minimumOffset &&
               offset.dy.abs() < _minimumOffset) {
             return;
           }
