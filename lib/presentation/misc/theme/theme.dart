@@ -4,18 +4,20 @@ part 'dark_mode.dart';
 part 'light_mode.dart';
 
 class ThemeConstants {
-  static const double defaultPadding = 16.0;
-  static const double defaultRadius = 12.0;
-  static const double defaultElevation = 4.0;
-  static const double defaultIconSize = 24.0;
-  static const double defaultIconButtonSize = 48.0;
-  static const double defaultTextSize = 16.0;
-  static const double defaultButtonHeight = 48.0;
+  static const defaultPadding = 16.0;
+  static const defaultRadius = 12.0;
+  static const defaultElevation = 4.0;
+  static const defaultIconSize = 24.0;
+  static const defaultIconButtonSize = 48.0;
+  static const defaultTextSize = 16.0;
+  static const defaultButtonHeight = 48.0;
   // Tile Colors
-  static const Color lightBrown = Color.fromARGB(255, 205, 193, 180);
-  static const Color darkBrown = Color.fromARGB(255, 187, 173, 160);
-  static const Color tan = Color.fromARGB(255, 238, 228, 218);
-  static const Color greyText = Color.fromARGB(255, 119, 110, 101);
+  static const surfaceLight = Color.fromARGB(255, 250, 248, 239);
+  static const lightBrown = Color.fromARGB(255, 205, 193, 180);
+  static const darkBrown = Color.fromARGB(255, 187, 173, 160);
+  static const tan = Color.fromARGB(255, 238, 228, 218);
+  static const greyText = Color.fromARGB(255, 119, 110, 101);
+  static const textColorWhite = Color.fromARGB(255, 249, 246, 242);
 
   static const color2 = Color.fromARGB(255, 238, 228, 218);
   static const color4 = Color.fromARGB(255, 238, 225, 201);
