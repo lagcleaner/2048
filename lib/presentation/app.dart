@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:game2048/presentation/controllers/theme_cubit.dart';
 import 'package:game2048/presentation/misc/theme/theme.dart';
 import 'package:game2048/presentation/screens/board/board_screen.dart';
 import 'package:game2048/presentation/screens/high_scores/high_scores.dart';
@@ -7,14 +9,15 @@ import 'package:game2048/presentation/screens/home/home_screen.dart';
 import 'package:game2048/presentation/screens/not_found/models/not_found_arguments_model.dart';
 import 'package:game2048/presentation/screens/not_found/not_found_screen.dart';
 
-class TwentyFortyEightApp extends StatelessWidget {
+class TwentyFortyEightApp extends ConsumerWidget {
   const TwentyFortyEightApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: '2048',
-      themeMode: ThemeMode.light,
+      debugShowCheckedModeBanner: false,
+      themeMode: ref.watch(themeProvider),
       theme: ThemeConstants.lightTheme,
       darkTheme: ThemeConstants.darkTheme,
       initialRoute: BoardScreen.route,
