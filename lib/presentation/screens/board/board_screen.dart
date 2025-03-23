@@ -17,8 +17,8 @@ class BoardScreen extends StatelessWidget {
     var boardArguments = switch (args) {
       Map<String, dynamic> args => BoardArgumentsModel.fromMap(args),
       BoardArgumentsModel args => args,
-      (int cols, int rows) => BoardArgumentsModel.survivalDefaultArgs.copyWith(
-        dimension: (cols: cols, rows: rows),
+      int dimension => BoardArgumentsModel.survivalDefaultArgs.copyWith(
+        dimension: dimension,
       ),
       BoardModeEnum.survivalMaxScore => BoardArgumentsModel.survivalDefaultArgs,
       BoardModeEnum.timeRecord => BoardArgumentsModel.timeRecordDefaultArgs,
