@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 
 class HighScoresScreen extends StatelessWidget {
-  const HighScoresScreen({super.key, required this.title});
+  const HighScoresScreen({super.key, this.args});
 
-  static String route = "/high_scores";
-  final String title;
+  static const String route = "/high_scores";
+  final Object? args;
 
   @override
   Widget build(BuildContext context) {
+    var homeArgs = switch (args) {
+      Map<String, dynamic> args => args,
+      Object args => throw UnimplementedError(),
+      null => throw UnimplementedError(),
+    };
     return _HighScoresScreenInternal();
   }
 }

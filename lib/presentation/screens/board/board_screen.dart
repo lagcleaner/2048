@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:game2048/presentation/screens/board/components/game_movement_detector.dart';
 import 'package:game2048/presentation/screens/board/models/board_arguments_model.dart';
 import 'package:game2048/presentation/screens/board/models/board_mode_enum.dart';
+import 'package:game2048/presentation/screens/board/models/board_args_model.dart';
 
 class BoardScreen extends StatelessWidget {
   const BoardScreen({super.key, this.args});
@@ -14,25 +15,27 @@ class BoardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var boardArguments = switch (args) {
-      Map<String, dynamic> args => BoardArgumentsModel.fromMap(args),
-      BoardArgumentsModel args => args,
-      int dimension => BoardArgumentsModel.survivalDefaultArgs.copyWith(
-        dimension: dimension,
+    BoardArgs boardArgs = switch (args) {
+      Map<String, dynamic> args => BoardArgs.fromJson(args),
+      BoardArgs args => args,
+      int dimension => BoardArgs.survivalDefaultArgs.copyWith(
+        gameMode: BoardArgs.survivalDefaultArgs.gameMode.copyWith(
+          dimension: dimension,
+        ),
       ),
-      BoardModeEnum.survivalMaxScore => BoardArgumentsModel.survivalDefaultArgs,
-      BoardModeEnum.timeRecord => BoardArgumentsModel.timeRecordDefaultArgs,
-      Object() || null => BoardArgumentsModel.survivalDefaultArgs,
+      GameModeEnum.survivalMaxScore => BoardArgs.survivalDefaultArgs,
+      GameModeEnum.timeRecord => BoardArgs.timeRecordDefaultArgs,
+      Object() || null => BoardArgs.survivalDefaultArgs,
     };
 
-    return _BoardScreenInternal(boardArguments: boardArguments);
+    return _BoardScreenInternal(boardArgs: boardArgs);
   }
 }
 
 class _BoardScreenInternal extends StatefulWidget {
   const _BoardScreenInternal({Key? key, required this.boardArguments})
     : super(key: key);
-  final BoardArgumentsModel boardArguments;
+  final BoardArgs boardArgs;
 
   @override
   State<_BoardScreenInternal> createState() => _BoardScreenInternalState();

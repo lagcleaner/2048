@@ -5,7 +5,7 @@ import 'package:game2048/presentation/screens/not_found/models/not_found_argumen
 class NotFoundScreen extends StatelessWidget {
   const NotFoundScreen({super.key, required this.arguments});
 
-  static String route = '/not_found';
+  static const String route = '/not_found';
   final NotFoundArgumentsModel arguments;
 
   @override
