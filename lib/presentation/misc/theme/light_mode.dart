@@ -1,7 +1,6 @@
 part of 'theme.dart';
 
-ThemeData lightThemeData = ThemeData(
-  brightness: Brightness.light,
+ThemeData lightThemeData = ThemeData.from(
   colorScheme: ColorScheme.light(
     brightness: Brightness.light,
     surface: ThemeConstants.surfaceLight,

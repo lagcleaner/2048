@@ -1,7 +1,6 @@
 part of 'theme.dart';
 
-ThemeData darkThemeData = ThemeData(
-  brightness: Brightness.dark,
+ThemeData darkThemeData = ThemeData.from(
   colorScheme: ColorScheme.dark(
     brightness: Brightness.dark,
     surface: const Color.fromARGB(255, 49, 27, 3),
