@@ -1,10 +1,18 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:nativewrappers/_internal/vm/lib/developer.dart';
+import 'dart:developer' show log;
+import 'dart:math' show min, max;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:game2048/presentation/components/button.dart';
+import 'package:game2048/presentation/components/gaps.dart';
+import 'package:game2048/presentation/components/theme_toggle_button.dart';
+import 'package:game2048/presentation/misc/theme/theme.dart';
+import 'package:game2048/presentation/models/game_mode_enum.dart';
+import 'package:game2048/presentation/screens/board/components/empty_board_frame.dart';
 import 'package:game2048/presentation/screens/board/components/game_movement_detector.dart';
-import 'package:game2048/presentation/screens/board/models/board_arguments_model.dart';
-import 'package:game2048/presentation/screens/board/models/board_mode_enum.dart';
+import 'package:game2048/presentation/screens/board/components/score_section.dart';
+import 'package:game2048/presentation/screens/board/controllers/game_cubit.dart';
 import 'package:game2048/presentation/screens/board/models/board_args_model.dart';
 
 class BoardScreen extends StatelessWidget {
@@ -32,60 +40,138 @@ class BoardScreen extends StatelessWidget {
   }
 }
 
-class _BoardScreenInternal extends StatefulWidget {
-  const _BoardScreenInternal({Key? key, required this.boardArguments})
+class _BoardScreenInternal extends ConsumerWidget {
+  const _BoardScreenInternal({Key? key, required this.boardArgs})
     : super(key: key);
   final BoardArgs boardArgs;
 
   @override
-  State<_BoardScreenInternal> createState() => _BoardScreenInternalState();
-}
-
-class _BoardScreenInternalState extends State<_BoardScreenInternal> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('2048'),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final size = max(
+      290.0,
+      min(
+        (MediaQuery.of(context).size.shortestSide * 0.90).floorToDouble(),
+        460.0,
       ),
-      body: Center(
-        child: Column(
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+    );
+    final dimension = boardArgs.gameMode.dimension;
+    final sizePerTile = (size / dimension).floorToDouble();
+    final tileSize = sizePerTile - 12.0 - (12.0 / dimension);
+    final boardSize = sizePerTile * dimension;
+
+    log(boardSize.toString());
+    log(tileSize.toString());
+
+    return GameMovementDetector(
+      onSwipeUp: () async => log('up'),
+      onSwipeDown: () async => log('down'),
+      onSwipeLeft: () async => log('left'),
+      onSwipeRight: () async => log('right'),
+      child: Scaffold(
+        appBar: AppBar(actions: [ThemeToggleButton()]),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            // Title
+            Padding(
+              padding: EdgeInsets.zero,
+              child: Center(
+                child: Text(
+                  '2048',
+                  style: TextStyle(
+                    color: ThemeConstants.greyText,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 52.0,
+                  ),
+                ),
+              ),
+            ),
+            // Subtitle
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ScoreSection(),
+                  Row(
+                    children: [
+                      ButtonWidget(
+                        icon: Icons.undo,
+                        onPressed: () {
+                          //Undo the round.
+                        },
+                      ),
+                      gapW16,
+                      ButtonWidget(
+                        icon: Icons.refresh,
+                        onPressed: () {
+                          //Restart the game
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            // Board
+            BoardWidget(
+              boardSize: boardSize,
+              tileSize: tileSize,
+              boardArguments: boardArgs,
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class BoardWidget extends ConsumerStatefulWidget {
+  final double boardSize;
+  final double tileSize;
+  final BoardArgs boardArguments;
+
+  BoardWidget({
+    super.key,
+    required this.boardArguments,
+    required this.boardSize,
+    required this.tileSize,
+  });
+
+  @override
+  ConsumerState<BoardWidget> createState() => _BoardWidgetState();
+}
+
+class _BoardWidgetState extends ConsumerState<BoardWidget>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
+    final bloc = ref.read(gameCubitProvider.bloc);
+    bloc.newGame(widget.boardArguments.gameMode);
+  }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        EmptyBoardFrame(
+          gameMode: widget.boardArguments.gameMode,
+          boardSize: widget.boardSize,
+          tileSize: widget.tileSize,
+        ),
+        // TileBoardWidget(
+        //   gameMode: widget.boardArguments.gameMode,
+        //   boardSize: widget.boardSize,
+        //   tileSize: widget.tileSize,
+        //   controller: controller,
+        // ),
+      ],
     );
   }
 }
