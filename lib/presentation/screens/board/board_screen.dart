@@ -145,6 +145,42 @@ class BoardWidget extends ConsumerStatefulWidget {
 
 class _BoardWidgetState extends ConsumerState<BoardWidget>
     with TickerProviderStateMixin, WidgetsBindingObserver {
+  //The contoller used to move the the tiles
+  late final AnimationController _moveController = AnimationController(
+    duration: const Duration(milliseconds: 100),
+    vsync: this,
+  )..addStatusListener((status) {
+    //When the movement finishes merge the tiles and start the scale animation which gives the pop effect.
+    if (status == AnimationStatus.completed) {
+      ref.read(gameCubitProvider.bloc).merge();
+      _scaleController.forward(from: 0.0);
+    }
+  });
+
+  //The curve animation for the move animation controller.
+  late final CurvedAnimation _moveAnimation = CurvedAnimation(
+    parent: _moveController,
+    curve: Curves.easeInOut,
+  );
+
+  //The contoller used to show a popup effect when the tiles get merged
+  late final AnimationController _scaleController = AnimationController(
+    duration: const Duration(milliseconds: 200),
+    vsync: this,
+  )..addStatusListener((status) {
+    //When the scale animation finishes end the round and if there is a queued movement start the move controller again for the next direction.
+    if (status == AnimationStatus.completed) {
+      if (ref.read(gameCubitProvider.bloc).endRound()) {
+        _moveController.forward(from: 0.0);
+      }
+    }
+  });
+
+  //The curve animation for the scale animation controller.
+  late final CurvedAnimation _scaleAnimation = CurvedAnimation(
+    parent: _scaleController,
+    curve: Curves.easeInOut,
+  );
 
   @override
   void initState() {
@@ -154,6 +190,16 @@ class _BoardWidgetState extends ConsumerState<BoardWidget>
     final bloc = ref.read(gameCubitProvider.bloc);
     bloc.newGame(widget.boardArguments.gameMode);
   }
+
+  @override
+  void dispose() {
+    //Dispose the animations.
+    _moveAnimation.dispose();
+    _scaleAnimation.dispose();
+    _moveController.dispose();
+    _scaleController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override
