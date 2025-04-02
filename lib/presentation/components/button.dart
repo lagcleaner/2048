@@ -21,7 +21,7 @@ class ButtonWidget extends ConsumerWidget {
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: IconButton(
-          color: ThemeConstants.textColorWhite,
+          color: ThemeConstants.whiteText,
           onPressed: onPressed,
           icon: Icon(icon, size: Sizes.p24),
         ),
