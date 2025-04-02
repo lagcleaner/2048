@@ -12,6 +12,7 @@ import 'package:game2048/presentation/models/game_mode_enum.dart';
 import 'package:game2048/presentation/screens/board/components/empty_board_frame.dart';
 import 'package:game2048/presentation/screens/board/components/game_movement_detector.dart';
 import 'package:game2048/presentation/screens/board/components/score_section.dart';
+import 'package:game2048/presentation/screens/board/components/tile_board.dart';
 import 'package:game2048/presentation/screens/board/controllers/game_cubit.dart';
 import 'package:game2048/presentation/screens/board/models/board_args_model.dart';
 
@@ -211,12 +212,10 @@ class _BoardWidgetState extends ConsumerState<BoardWidget>
           boardSize: widget.boardSize,
           tileSize: widget.tileSize,
         ),
-        // TileBoardWidget(
-        //   gameMode: widget.boardArguments.gameMode,
-        //   boardSize: widget.boardSize,
-        //   tileSize: widget.tileSize,
-        //   controller: controller,
-        // ),
+        TileBoardWidget(
+          boardSize: widget.boardSize,
+          tileSize: widget.tileSize,
+        ),
       ],
     );
   }

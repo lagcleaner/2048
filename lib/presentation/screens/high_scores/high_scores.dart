@@ -8,9 +8,9 @@ class HighScoresScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var homeArgs = switch (args) {
+    var _ = switch (args) {
       Map<String, dynamic> args => args,
-      Object args => throw UnimplementedError(),
+      Object _ => throw UnimplementedError(),
       null => throw UnimplementedError(),
     };
     return _HighScoresScreenInternal();
@@ -18,7 +18,7 @@ class HighScoresScreen extends StatelessWidget {
 }
 
 class _HighScoresScreenInternal extends StatelessWidget {
-  const _HighScoresScreenInternal({Key? key}) : super(key: key);
+  const _HighScoresScreenInternal({super.key});
 
   @override
   Widget build(BuildContext context) {

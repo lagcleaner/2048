@@ -4,8 +4,12 @@ import 'package:game2048/presentation/components/gaps.dart';
 import 'package:game2048/presentation/misc/theme/theme.dart';
 
 class ButtonWidget extends ConsumerWidget {
-  const ButtonWidget({Key? key, this.text, this.icon, required this.onPressed})
-    : super(key: key);
+  const ButtonWidget({
+    super.key,
+    this.text,
+    this.icon,
+    required this.onPressed,
+  });
 
   final String? text;
   final IconData? icon;
