@@ -13,7 +13,7 @@ part 'game_state_model.g.dart';
 abstract class GameState with _$GameState {
   factory GameState({
     required GameMode mode,
-    @Default(<List<Tile>>[]) List<List<Tile>> board,
+    @Default(<Tile>[]) List<Tile> tiles,
     @Default(0) int best,
     @Default(0) int score,
     @Default(GameStatus.stoped) GameStatus status,
@@ -25,31 +25,20 @@ abstract class GameState with _$GameState {
 
   factory GameState.newGame({
     required int best,
-    required List<List<Tile>> board,
+    required List<Tile> tiles,
     required GameMode mode,
   }) => GameState(
     best: best,
-    board: board,
+    tiles: tiles,
     mode: mode,
     score: 0,
-    status: GameStatus.stoped,
+    status: GameStatus.playing,
     undo: null,
   );
 }
 
 extension GameStateExtension on GameState {
-  Iterable<Tile> get flattened => (this as _$GameState).board.expand((e) => e);
-  List<List<Tile>> get tiles => (this as _$GameState).board;
-  List<List<Tile>> get rows => (this as _$GameState).board;
-  List<List<Tile>> get cols => List.generate(
-    (this as _$GameState).board.length,
-    (x) => List.generate(
-      (this as _$GameState).board[0].length,
-      (y) => (this as _$GameState).board[y][x],
-    ),
-  );
-
-  Tile at(int row, int col) {
-    return (this as _$GameState).board[row][col];
-  }
+  // Tile at(int row, int col) {
+  //   return (this as _$GameState).tiles[row][col];
+  // }
 }

@@ -7,18 +7,18 @@ import 'package:game2048/presentation/screens/board/models/tile_model.dart';
 import 'package:riverbloc/riverbloc.dart';
 
 class GameCubit extends Cubit<GameState> {
-  // We will use this list to retrieve the right index when user swipes up/down
-  // which will allow us to reuse most of the logic.
-  final verticalOrder = [12, 8, 4, 0, 13, 9, 5, 1, 14, 10, 6, 2, 15, 11, 7, 3];
-
   GameCubit([GameState? state])
     : super(
         state ??
-            GameState.newGame(best: 0, board: [], mode: GameMode.survival()),
+            GameState.newGame(best: 0, tiles: [], mode: GameMode.survival()),
       ) {
     //Load the last saved state or start a new game.
     // load();
   }
+
+  // We will use this list to retrieve the right index when user swipes up/down
+  // which will allow us to reuse most of the logic.
+  int get dim => state.mode.dimension;
 
   void load([GameMode? mode]) async {
     //Access the box and get the first item at index 0
