@@ -29,6 +29,7 @@ dev_dependencies:
   freezed: ^2.5.8
   flutter_lints: ^5.0.0
   build_runner: ^2.4.15
+  hive_generator_plus: ^4.0.2
   json_serializable: ^6.9.4
   riverpod_generator: ^2.6.4
 
