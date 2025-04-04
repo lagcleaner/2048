@@ -11,13 +11,14 @@ part 'game_state_model.g.dart';
 
 @freezed
 abstract class GameState with _$GameState {
+  @JsonSerializable(explicitToJson: true)
   factory GameState({
-    required GameMode mode,
-    @Default(<Tile>[]) List<Tile> tiles,
+    @JsonKey(includeToJson: true) required GameMode mode,
+    @JsonKey(includeToJson: true) @Default(<Tile>[]) List<Tile> tiles,
     @Default(0) int best,
     @Default(0) int score,
     @Default(GameStatus.stoped) GameStatus status,
-    GameState? undo,
+    @JsonKey(includeToJson: true) GameState? undo,
   }) = _GameState;
 
   factory GameState.fromJson(Map<String, dynamic> json) =>
@@ -39,6 +40,7 @@ abstract class GameState with _$GameState {
 
 extension GameStateExtension on GameState {
   // Tile at(int row, int col) {
-  //   return (this as _$GameState).tiles[row][col];
+  //   GameState(mode: GameMode()).toJson();
+  //   // return (this as _$GameState).tiles[row][col];
   // }
 }

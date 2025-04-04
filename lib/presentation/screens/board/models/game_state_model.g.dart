@@ -27,12 +27,12 @@ _$GameStateImpl _$$GameStateImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$GameStateImplToJson(_$GameStateImpl instance) =>
     <String, dynamic>{
-      'mode': instance.mode,
-      'tiles': instance.tiles,
+      'mode': instance.mode.toJson(),
+      'tiles': instance.tiles.map((e) => e.toJson()).toList(),
       'best': instance.best,
       'score': instance.score,
       'status': _$GameStatusEnumMap[instance.status]!,
-      'undo': instance.undo,
+      'undo': instance.undo?.toJson(),
     };
 
 const _$GameStatusEnumMap = {

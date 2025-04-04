@@ -21,11 +21,14 @@ GameState _$GameStateFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$GameState {
+  @JsonKey(includeToJson: true)
   GameMode get mode => throw _privateConstructorUsedError;
+  @JsonKey(includeToJson: true)
   List<Tile> get tiles => throw _privateConstructorUsedError;
   int get best => throw _privateConstructorUsedError;
   int get score => throw _privateConstructorUsedError;
   GameStatus get status => throw _privateConstructorUsedError;
+  @JsonKey(includeToJson: true)
   GameState? get undo => throw _privateConstructorUsedError;
 
   /// Serializes this GameState to a JSON map.
@@ -44,12 +47,12 @@ abstract class $GameStateCopyWith<$Res> {
       _$GameStateCopyWithImpl<$Res, GameState>;
   @useResult
   $Res call({
-    GameMode mode,
-    List<Tile> tiles,
+    @JsonKey(includeToJson: true) GameMode mode,
+    @JsonKey(includeToJson: true) List<Tile> tiles,
     int best,
     int score,
     GameStatus status,
-    GameState? undo,
+    @JsonKey(includeToJson: true) GameState? undo,
   });
 
   $GameModeCopyWith<$Res> get mode;
@@ -150,12 +153,12 @@ abstract class _$$GameStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    GameMode mode,
-    List<Tile> tiles,
+    @JsonKey(includeToJson: true) GameMode mode,
+    @JsonKey(includeToJson: true) List<Tile> tiles,
     int best,
     int score,
     GameStatus status,
-    GameState? undo,
+    @JsonKey(includeToJson: true) GameState? undo,
   });
 
   @override
@@ -223,25 +226,27 @@ class __$$GameStateImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$GameStateImpl implements _GameState {
   _$GameStateImpl({
-    required this.mode,
-    final List<Tile> tiles = const <Tile>[],
+    @JsonKey(includeToJson: true) required this.mode,
+    @JsonKey(includeToJson: true) final List<Tile> tiles = const <Tile>[],
     this.best = 0,
     this.score = 0,
     this.status = GameStatus.stoped,
-    this.undo,
+    @JsonKey(includeToJson: true) this.undo,
   }) : _tiles = tiles;
 
   factory _$GameStateImpl.fromJson(Map<String, dynamic> json) =>
       _$$GameStateImplFromJson(json);
 
   @override
+  @JsonKey(includeToJson: true)
   final GameMode mode;
   final List<Tile> _tiles;
   @override
-  @JsonKey()
+  @JsonKey(includeToJson: true)
   List<Tile> get tiles {
     if (_tiles is EqualUnmodifiableListView) return _tiles;
     // ignore: implicit_dynamic_type
@@ -258,6 +263,7 @@ class _$GameStateImpl implements _GameState {
   @JsonKey()
   final GameStatus status;
   @override
+  @JsonKey(includeToJson: true)
   final GameState? undo;
 
   @override
@@ -306,20 +312,22 @@ class _$GameStateImpl implements _GameState {
 
 abstract class _GameState implements GameState {
   factory _GameState({
-    required final GameMode mode,
-    final List<Tile> tiles,
+    @JsonKey(includeToJson: true) required final GameMode mode,
+    @JsonKey(includeToJson: true) final List<Tile> tiles,
     final int best,
     final int score,
     final GameStatus status,
-    final GameState? undo,
+    @JsonKey(includeToJson: true) final GameState? undo,
   }) = _$GameStateImpl;
 
   factory _GameState.fromJson(Map<String, dynamic> json) =
       _$GameStateImpl.fromJson;
 
   @override
+  @JsonKey(includeToJson: true)
   GameMode get mode;
   @override
+  @JsonKey(includeToJson: true)
   List<Tile> get tiles;
   @override
   int get best;
@@ -328,6 +336,7 @@ abstract class _GameState implements GameState {
   @override
   GameStatus get status;
   @override
+  @JsonKey(includeToJson: true)
   GameState? get undo;
 
   /// Create a copy of GameState

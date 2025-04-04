@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:game2048/presentation/models/game_mode_enum.dart';
-import 'package:hive/hive.dart';
 
 part 'game_mode_model.freezed.dart';
 part 'game_mode_model.g.dart';
