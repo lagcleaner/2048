@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:game2048/presentation/components/button.dart';
 import 'package:game2048/presentation/components/gaps.dart';
 import 'package:game2048/presentation/components/theme_toggle_button.dart';
+import 'package:game2048/presentation/misc/extensions/size_context_extension.dart';
 import 'package:game2048/presentation/misc/theme/theme.dart';
 import 'package:game2048/presentation/models/game_mode_enum.dart';
 import 'package:game2048/presentation/screens/board/components/empty_board_frame.dart';
