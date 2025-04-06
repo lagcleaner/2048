@@ -36,115 +36,38 @@ class BoardScreen extends StatelessWidget {
       GameModeEnum.timeRecord => BoardArgs.timeRecordDefaultArgs,
       Object() || null => BoardArgs.survivalDefaultArgs,
     };
+    //
+    final size = context.boardSize;
+    final dim = boardArgs.gameMode.dimension;
+    final sizePerTile = (size / dim).floorToDouble();
+    final tileSize = sizePerTile - 12.0 - (12.0 / dim);
+    final boardSize = sizePerTile * dim;
 
-    return _BoardScreenInternal(boardArgs: boardArgs);
+    return _BoardScreenInternal(
+      boardArgs: boardArgs,
+      boardSize: boardSize,
+      tileSize: tileSize,
+    );
   }
 }
 
-class _BoardScreenInternal extends ConsumerWidget {
-  const _BoardScreenInternal({Key? key, required this.boardArgs})
-    : super(key: key);
+class _BoardScreenInternal extends ConsumerStatefulWidget {
+  const _BoardScreenInternal({
+    required this.boardSize,
+    required this.tileSize,
+    required this.boardArgs,
+  });
+
+  final double boardSize;
+  final double tileSize;
   final BoardArgs boardArgs;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final size = max(
-      290.0,
-      min(
-        (MediaQuery.of(context).size.shortestSide * 0.90).floorToDouble(),
-        460.0,
-      ),
-    );
-    final dimension = boardArgs.gameMode.dimension;
-    final sizePerTile = (size / dimension).floorToDouble();
-    final tileSize = sizePerTile - 12.0 - (12.0 / dimension);
-    final boardSize = sizePerTile * dimension;
-
-    log(boardSize.toString());
-    log(tileSize.toString());
-
-    return GameMovementDetector(
-      onSwipeUp: () async => log('up'),
-      onSwipeDown: () async => log('down'),
-      onSwipeLeft: () async => log('left'),
-      onSwipeRight: () async => log('right'),
-      child: Scaffold(
-        appBar: AppBar(actions: [ThemeToggleButton()]),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            // Title
-            Padding(
-              padding: EdgeInsets.zero,
-              child: Center(
-                child: Text(
-                  '2048',
-                  style: TextStyle(
-                    color: ThemeConstants.greyText,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 52.0,
-                  ),
-                ),
-              ),
-            ),
-            // Subtitle
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ScoreSection(),
-                  Row(
-                    children: [
-                      ButtonWidget(
-                        icon: Icons.undo,
-                        onPressed: () {
-                          //Undo the round.
-                        },
-                      ),
-                      gapW16,
-                      ButtonWidget(
-                        icon: Icons.refresh,
-                        onPressed: () {
-                          //Restart the game
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            // Board
-            BoardWidget(
-              boardSize: boardSize,
-              tileSize: tileSize,
-              boardArguments: boardArgs,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  ConsumerState<_BoardScreenInternal> createState() =>
+      _BoardScreenInternalState();
 }
 
-class BoardWidget extends ConsumerStatefulWidget {
-  final double boardSize;
-  final double tileSize;
-  final BoardArgs boardArguments;
-
-  BoardWidget({
-    super.key,
-    required this.boardArguments,
-    required this.boardSize,
-    required this.tileSize,
-  });
-
-  @override
-  ConsumerState<BoardWidget> createState() => _BoardWidgetState();
-}
-
-class _BoardWidgetState extends ConsumerState<BoardWidget>
+class _BoardScreenInternalState extends ConsumerState<_BoardScreenInternal>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   //The contoller used to move the the tiles
   late final AnimationController _moveController = AnimationController(
@@ -187,9 +110,17 @@ class _BoardWidgetState extends ConsumerState<BoardWidget>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
     final bloc = ref.read(gameCubitProvider.bloc);
-    bloc.newGame(widget.boardArguments.gameMode);
+    bloc.newGame(widget.boardArgs.gameMode);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    //Save current state when the app becomes inactive
+    if (state == AppLifecycleState.inactive) {
+      ref.read(gameCubitProvider.bloc).save();
+    }
+    super.didChangeAppLifecycleState(state);
   }
 
   @override
@@ -205,18 +136,83 @@ class _BoardWidgetState extends ConsumerState<BoardWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        EmptyBoardFrame(
-          gameMode: widget.boardArguments.gameMode,
-          boardSize: widget.boardSize,
-          tileSize: widget.tileSize,
+    return GameMovementDetector(
+      onSwipe: (direction) async {
+        log(direction.toString());
+        if (ref.read(gameCubitProvider.bloc).move(direction)) {
+          _moveController.forward(from: 0.0);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(actions: [ThemeToggleButton()]),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            // Title
+            Padding(
+              padding: EdgeInsets.zero,
+              child: Center(
+                child: Text(
+                  '2048',
+                  style: TextStyle(
+                    color: ThemeConstants.greyText,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 52.0,
+                  ),
+                ),
+              ),
+            ),
+            // Subtitle
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ScoreSection(),
+                  Row(
+                    children: [
+                      ButtonWidget(
+                        icon: Icons.undo,
+                        onPressed: () {
+                          //Undo the round.
+                          ref.read(gameCubitProvider.bloc).undo();
+                        },
+                      ),
+                      gapW16,
+                      ButtonWidget(
+                        icon: Icons.refresh,
+                        onPressed: () {
+                          //Restart the game
+                          ref
+                              .read(gameCubitProvider.bloc)
+                              .newGame(widget.boardArgs.gameMode);
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            // Board
+            Stack(
+              children: [
+                EmptyBoardFrame(
+                  gameMode: widget.boardArgs.gameMode,
+                  boardSize: widget.boardSize,
+                  tileSize: widget.tileSize,
+                ),
+                TileBoardWidget(
+                  moveAnimation: _moveAnimation,
+                  scaleAnimation: _scaleAnimation,
+                  boardSize: widget.boardSize,
+                  tileSize: widget.tileSize,
+                ),
+              ],
+            ),
+          ],
         ),
-        TileBoardWidget(
-          boardSize: widget.boardSize,
-          tileSize: widget.tileSize,
-        ),
-      ],
+      ),
     );
   }
 }
