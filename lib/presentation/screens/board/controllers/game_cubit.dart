@@ -6,7 +6,6 @@ import 'package:game2048/presentation/screens/board/controllers/next_direction_c
 import 'package:game2048/presentation/screens/board/controllers/round_cubit.dart';
 import 'package:game2048/presentation/screens/board/models/game_state_model.dart';
 import 'package:game2048/presentation/screens/board/models/tile_model.dart';
-import 'package:hive/hive.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:riverbloc/riverbloc.dart';
 import 'package:uuid/uuid.dart';
@@ -85,7 +84,7 @@ class GameCubit extends HydratedCubit<GameState> {
     var rng = Random();
     var filledIndexes = indexes.toList();
     count = max(min(indexes.length, count), 1);
-    while (count > 0) {
+    while (count > 0 && filledIndexes.length < state.mode.squaredDim) {
       i = rng.nextInt(state.mode.squaredDim);
       if (filledIndexes.contains(i)) continue;
       yield Tile(index: i, value: 2, id: Uuid().v4());
@@ -295,23 +294,24 @@ class GameCubit extends HydratedCubit<GameState> {
 
   /// Check whether the indexes are in the same row or column in the board.
   bool _inSameRowOrCol(int index, int nextIndex) {
-    return (index % dim == nextIndex % dim) ||
+    return (index % dim == nextIndex % dim &&
+            (index - nextIndex).abs() < dim) ||
         (index ~/ dim == nextIndex ~/ dim);
   }
 
-  void load() async {
-    var box = await Hive.openBox<GameState>('gameStateBox');
-    emit(box.get(0) ?? _newGame());
-  }
+  // void load() async {
+  //   var box = await Hive.openBox<GameState>('gameStateBox');
+  //   emit(box.get(0) ?? _newGame());
+  // }
 
-  void save() async {
-    var box = await Hive.openBox<GameState>('gameStateBox');
-    try {
-      box.putAt(0, state);
-    } catch (e) {
-      box.add(state);
-    }
-  }
+  // void save() async {
+  //   var box = await Hive.openBox<GameState>('gameStateBox');
+  //   try {
+  //     box.putAt(0, state);
+  //   } catch (e) {
+  //     box.add(state);
+  //   }
+  // }
 
   @override
   GameState? fromJson(Map<String, dynamic> json) {
