@@ -20,7 +20,7 @@ class EmptyBoardFrame extends StatelessWidget {
       width: boardSize,
       height: boardSize,
       decoration: BoxDecoration(
-        color: boardColor,
+        color: ThemeConstants.darkBrown,
         borderRadius: BorderRadius.circular(6.0),
       ),
       child: Stack(
@@ -40,7 +40,7 @@ class EmptyBoardFrame extends StatelessWidget {
               width: tileSize,
               height: tileSize,
               decoration: BoxDecoration(
-                color: emptyTileColor,
+                color: ThemeConstants.lightBrown,
                 borderRadius: BorderRadius.circular(6.0),
               ),
             ),

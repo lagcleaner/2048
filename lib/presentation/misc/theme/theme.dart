@@ -18,6 +18,8 @@ class ThemeConstants {
   static const tan = Color.fromARGB(255, 238, 228, 218);
   static const greyText = Color.fromARGB(255, 119, 110, 101);
   static const whiteText = Color.fromARGB(255, 249, 246, 242);
+  static const overlayColor = Color.fromRGBO(238, 228, 218, 0.73);
+  static const buttonColor = Color.fromARGB(255, 143, 122, 102);
 
   static const color2 = Color.fromARGB(255, 238, 228, 218);
   static const color4 = Color.fromARGB(255, 238, 225, 201);

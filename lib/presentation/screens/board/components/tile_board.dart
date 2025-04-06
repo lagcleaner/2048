@@ -62,14 +62,14 @@ class TileBoardWidget extends ConsumerWidget {
           if (game.status.isOver)
             Positioned.fill(
               child: Container(
-                color: overlayColor,
+                color: ThemeConstants.overlayColor,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       game.status.isWon ? 'You win!' : 'Game over!',
                       style: const TextStyle(
-                        color: textColor,
+                        color: ThemeConstants.greyText,
                         fontWeight: FontWeight.bold,
                         fontSize: 64.0,
                       ),

@@ -36,7 +36,9 @@ class ButtonWidget extends ConsumerWidget {
         padding: WidgetStateProperty.all<EdgeInsets>(
           const EdgeInsets.all(16.0),
         ),
-        backgroundColor: WidgetStateProperty.all<Color>(buttonColor),
+        backgroundColor: WidgetStateProperty.all<Color>(
+          ThemeConstants.buttonColor,
+        ),
       ),
       onPressed: onPressed,
       child: Text(
