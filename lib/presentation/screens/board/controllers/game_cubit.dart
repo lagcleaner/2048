@@ -22,6 +22,9 @@ class GameCubit extends HydratedCubit<GameState> {
     //Load the last saved state or start a new game.
     // load();
   }
+  void load([GameMode? currentMode]) {
+    if (currentMode == state.mode) emit(state);
+  }
 
   // We will use this list to retrieve the right index when user swipes up/down
   // which will allow us to reuse most of the logic.

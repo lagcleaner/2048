@@ -136,6 +136,7 @@ class _BoardScreenInternalState extends ConsumerState<_BoardScreenInternal>
 
   @override
   Widget build(BuildContext context) {
+    ref.read(gameCubitProvider.bloc).load(widget.boardArgs.gameMode);
     return GameMovementDetector(
       onSwipe: (direction) async {
         log(direction.toString());
