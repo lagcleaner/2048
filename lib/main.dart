@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:game2048/presentation/app.dart';
-import 'package:game2048/presentation/models/game_mode_model.dart';
-import 'package:game2048/presentation/screens/board/models/game_mode_adapter.dart';
-import 'package:game2048/presentation/screens/board/models/game_state_adapter.dart';
-import 'package:game2048/presentation/screens/board/models/game_state_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
@@ -27,7 +23,7 @@ Future<void> initialize() async {
   );
   // Hive
   await Hive.initFlutter(directory.path);
-  Hive.registerAdapter<GameState>(GameStateAdapter());
-  Hive.registerAdapter<GameMode>(GameModeAdapter());
-  await Hive.openBox<GameState>('gameStateBox');
+  // Hive.registerAdapter<GameState>(GameStateAdapter());
+  // Hive.registerAdapter<GameMode>(GameModeAdapter());
+  // await Hive.openBox<GameState>('gameStateBox');
 }
