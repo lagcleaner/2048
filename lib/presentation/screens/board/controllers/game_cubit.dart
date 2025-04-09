@@ -1,6 +1,9 @@
+import 'dart:developer';
 import 'dart:math' show Random, max, min;
 
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
+import 'package:game2048/core/error_handling/result.dart';
+import 'package:game2048/data/services/game_storage_services.dart';
 import 'package:game2048/presentation/models/game_mode_model.dart';
 import 'package:game2048/presentation/screens/board/controllers/next_direction_cubit.dart';
 import 'package:game2048/presentation/screens/board/controllers/round_cubit.dart';
@@ -12,17 +15,33 @@ import 'package:uuid/uuid.dart';
 class GameCubit extends Cubit<GameState> {
   final RoundCubit round;
   final NextDirectionCubit nextDirection;
+  final GameStorageServices storageServices;
 
-  GameCubit(this.round, this.nextDirection, [GameState? state])
-    : super(
-        state ??
-            GameState.newGame(best: 0, tiles: [], mode: GameMode.survival()),
-      ) {
+  GameCubit(
+    this.round,
+    this.nextDirection,
+    this.storageServices, [
+    GameState? state,
+  ]) : super(
+         state ??
+             GameState.newGame(best: 0, tiles: [], mode: GameMode.survival()),
+       ) {
     //Load the last saved state or start a new game.
-    // load();
+    load();
   }
-  void load([GameMode? currentMode]) {
-    if (currentMode == state.mode) emit(state);
+  void load([GameMode? currentMode]) async {
+    log("------------ Loading Game ----------------");
+    final result = await storageServices.loadGame(
+      key: currentMode?.toString() ?? 'default',
+    );
+    final stateToEmit = switch (result) {
+      Success(value: final gameState) => gameState ?? state,
+      Failure(exception: final _) => state,
+    };
+    if (result.isSuccess) {
+      log("------------ Loaded Game ----------------");
+    }
+    emit(stateToEmit);
   }
 
   // We will use this list to retrieve the right index when user swipes up/down
@@ -139,7 +158,13 @@ class GameCubit extends Cubit<GameState> {
     if (tilesMoved) {
       tiles.addAll(random(indexes));
     }
-    emit(state.copyWith(score: score, tiles: tiles));
+    emit(
+      state.copyWith(
+        score: score,
+        best: max(state.best, state.score),
+        tiles: tiles,
+      ),
+    );
   }
 
   //Finish round, win or loose the game.
@@ -263,7 +288,7 @@ class GameCubit extends Cubit<GameState> {
 
   GameState _newGame([GameMode? mode]) {
     return GameState.newGame(
-      best: state.best,
+      best: max(state.best, state.score),
       tiles: [...random([], count: 2)],
       mode: state.mode,
     );
@@ -301,6 +326,18 @@ class GameCubit extends Cubit<GameState> {
         (index ~/ dim == nextIndex ~/ dim);
   }
 
+  void save() async {
+    log("------------ Saving Game ----------------");
+    final result = await storageServices.saveGame(
+      key: state.mode.toString(),
+      game: state,
+    );
+    if (result case Failure(exception: final e)) {
+      log(e.toString());
+    }
+    if (result.isSuccess) {
+      log("------------ Saved Game ----------------");
+    }
   }
 }
 
@@ -308,5 +345,6 @@ final gameCubitProvider = BlocProvider<GameCubit, GameState>((ref) {
   return GameCubit(
     ref.read(roundCubit.bloc),
     ref.read(nextDirectionCubit.bloc),
+    ref.read(gameStorageServicesProvider),
   );
 });

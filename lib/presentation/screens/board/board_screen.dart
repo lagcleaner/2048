@@ -118,7 +118,7 @@ class _BoardScreenInternalState extends ConsumerState<_BoardScreenInternal>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     //Save current state when the app becomes inactive
     if (state == AppLifecycleState.inactive) {
-      // ref.read(gameCubitProvider.bloc).save();
+      ref.read(gameCubitProvider.bloc).save();
     }
     super.didChangeAppLifecycleState(state);
   }
