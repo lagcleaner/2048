@@ -159,11 +159,7 @@ class GameCubit extends Cubit<GameState> {
       tiles.addAll(random(indexes));
     }
     emit(
-      state.copyWith(
-        score: score,
-        best: max(state.best, state.score),
-        tiles: tiles,
-      ),
+      state.copyWith(score: score, best: max(state.best, score), tiles: tiles),
     );
   }
 
