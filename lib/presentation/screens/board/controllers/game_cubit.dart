@@ -6,11 +6,10 @@ import 'package:game2048/presentation/screens/board/controllers/next_direction_c
 import 'package:game2048/presentation/screens/board/controllers/round_cubit.dart';
 import 'package:game2048/presentation/screens/board/models/game_state_model.dart';
 import 'package:game2048/presentation/screens/board/models/tile_model.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:riverbloc/riverbloc.dart';
 import 'package:uuid/uuid.dart';
 
-class GameCubit extends HydratedCubit<GameState> {
+class GameCubit extends Cubit<GameState> {
   final RoundCubit round;
   final NextDirectionCubit nextDirection;
 
@@ -302,28 +301,6 @@ class GameCubit extends HydratedCubit<GameState> {
         (index ~/ dim == nextIndex ~/ dim);
   }
 
-  // void load() async {
-  //   var box = await Hive.openBox<GameState>('gameStateBox');
-  //   emit(box.get(0) ?? _newGame());
-  // }
-
-  // void save() async {
-  //   var box = await Hive.openBox<GameState>('gameStateBox');
-  //   try {
-  //     box.putAt(0, state);
-  //   } catch (e) {
-  //     box.add(state);
-  //   }
-  // }
-
-  @override
-  GameState? fromJson(Map<String, dynamic> json) {
-    return GameState.fromJson(json);
-  }
-
-  @override
-  Map<String, dynamic>? toJson(GameState state) {
-    return state.toJson();
   }
 }
 
