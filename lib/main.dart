@@ -23,7 +23,4 @@ Future<void> initialize() async {
   );
   // Hive
   await Hive.initFlutter(directory.path);
-  // Hive.registerAdapter<GameState>(GameStateAdapter());
-  // Hive.registerAdapter<GameMode>(GameModeAdapter());
-  // await Hive.openBox<GameState>('gameStateBox');
 }
