@@ -145,7 +145,7 @@ class _BoardScreenInternalState extends ConsumerState<_BoardScreenInternal>
         }
       },
       child: Scaffold(
-        appBar: AppBar(actions: [ThemeToggleButton()]),
+        appBar: AppBar(actions: [ThemeToggleButton()], leading: SizedBox()),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
